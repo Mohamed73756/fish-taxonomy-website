@@ -2,9 +2,9 @@ import streamlit as st
 import pandas as pd
 import os
 
-# ----------------------------
+# =====================================================
 # PAGE CONFIG
-# ----------------------------
+# =====================================================
 
 st.set_page_config(
     page_title="Fish Taxonomy Database",
@@ -12,74 +12,131 @@ st.set_page_config(
     layout="wide"
 )
 
-IMAGE_FOLDER = "images"
+# =====================================================
+# OCEAN THEME (LIGHT BLUE BACKGROUND)
+# =====================================================
 
-# ----------------------------
+st.markdown(
+    """
+    <style>
+    .stApp {
+        background: linear-gradient(to bottom, #dff6ff, #ffffff);
+    }
+
+    h1, h2, h3 {
+        color: #0b3d91;
+    }
+
+    .stSidebar {
+        background-color: #cfefff;
+    }
+    </style>
+    """,
+    unsafe_allow_html=True
+)
+
+# =====================================================
 # LOAD DATA
-# ----------------------------
+# =====================================================
 
 df = pd.read_excel("fish_data.xlsx")
 df.columns = df.columns.str.strip()
 
-# ----------------------------
+# CLEAN TEXT (VERY IMPORTANT FIX)
+for col in ["Order", "Family", "Scientific_Name", "image"]:
+    if col in df.columns:
+        df[col] = df[col].astype(str).str.strip()
+
+IMAGE_FOLDER = "images"
+
+# =====================================================
 # TITLE
-# ----------------------------
+# =====================================================
 
-st.title("🐟 Fish Taxonomy Database")
+st.title("🐟 Marine Fish Taxonomy Database")
+st.write("Interactive classification of marine fish species.")
 
-st.write("Interactive fish species database with taxonomy and images.")
+# =====================================================
+# COPY DATAFRAME (IMPORTANT)
+# =====================================================
 
-# ----------------------------
-# SIDEBAR FILTERS
-# ----------------------------
+filtered_df = df.copy()
 
-st.sidebar.header("Filters")
-
+# =====================================================
 # ORDER FILTER
-orders = ["All"] + sorted(df["Order"].dropna().unique().tolist())
+# =====================================================
+
+orders = ["All"] + sorted(filtered_df["Order"].dropna().unique().tolist())
+
 selected_order = st.sidebar.selectbox("Order", orders)
 
 if selected_order != "All":
-    df = df[df["Order"] == selected_order]
+    filtered_df = filtered_df[
+        filtered_df["Order"] == selected_order
+    ]
 
-# FAMILY FILTER
-families = ["All"] + sorted(df["Family"].dropna().unique().tolist())
+# =====================================================
+# FAMILY FILTER (DEPENDS ON ORDER FILTER)
+# =====================================================
+
+families = ["All"] + sorted(filtered_df["Family"].dropna().unique().tolist())
+
 selected_family = st.sidebar.selectbox("Family", families)
 
 if selected_family != "All":
-    df = df[df["Family"] == selected_family]
+    filtered_df = filtered_df[
+        filtered_df["Family"] == selected_family
+    ]
 
+# =====================================================
 # SEARCH
+# =====================================================
+
 search = st.sidebar.text_input("Search Scientific Name")
 
 if search:
-    df = df[df["Scientific_Name"].str.contains(search, case=False, na=False)]
+    filtered_df = filtered_df[
+        filtered_df["Scientific_Name"].str.contains(
+            search,
+            case=False,
+            na=False
+        )
+    ]
 
-# ----------------------------
-# RESULTS
-# ----------------------------
+# =====================================================
+# RESULTS COUNT
+# =====================================================
 
-st.success(f"{len(df)} species found")
+st.success(f"{len(filtered_df)} species found")
 
 st.divider()
 
-# ----------------------------
-# DISPLAY RESULTS
-# ----------------------------
+# =====================================================
+# DISPLAY FISH
+# =====================================================
 
-for _, row in df.iterrows():
+for _, row in filtered_df.iterrows():
 
     col1, col2 = st.columns([1, 2])
 
+    # -------------------------
+    # IMAGE
+    # -------------------------
     with col1:
-        img_path = os.path.join(IMAGE_FOLDER, str(row["image"]).strip())
+
+        img_file = str(row["image"]).strip()
+        img_path = os.path.join(IMAGE_FOLDER, img_file)
 
         if os.path.exists(img_path):
             st.image(img_path, use_container_width=True)
         else:
-            st.error(f"Missing image: {row['image']}")
+            st.error(f"Missing image: {img_file}")
 
+    # -------------------------
+    # TEXT INFO
+    # -------------------------
     with col2:
+
         st.subheader(row["Scientific_Name"])
         st.write(f"**Order:** {row['Order']}")
         st.write(f"**Family:** {row['Family']}")
