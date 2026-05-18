@@ -43,11 +43,11 @@ df = pd.read_excel("fish_data.xlsx")
 df.columns = df.columns.str.strip()
 
 # =====================================================
-# CLEAN DATA (IMPORTANT)
+# CLEAN DATA (SAFE FOR TAXONOMY)
 # =====================================================
 
 def clean_text(x):
-    return str(x).replace("\xa0", " ").strip().lower()
+    return str(x).replace("\xa0", " ").strip()
 
 for col in ["Order", "Family", "Scientific_Name", "image"]:
     df[col] = df[col].apply(clean_text)
@@ -65,26 +65,26 @@ filtered_df = df.copy()
 # =====================================================
 
 st.title("🐟 Marine Fish Taxonomy Database")
-st.write("Browse fish species with images and taxonomy filters.")
+st.write("Browse marine fish by Order, Family, and Species.")
 
 # =====================================================
 # ORDER FILTER
 # =====================================================
 
-orders = ["all"] + sorted(filtered_df["Order"].unique().tolist())
+orders = ["All"] + sorted(filtered_df["Order"].dropna().unique().tolist())
 selected_order = st.sidebar.selectbox("Order", orders)
 
-if selected_order != "all":
+if selected_order != "All":
     filtered_df = filtered_df[filtered_df["Order"] == selected_order]
 
 # =====================================================
 # FAMILY FILTER
 # =====================================================
 
-families = ["all"] + sorted(filtered_df["Family"].unique().tolist())
+families = ["All"] + sorted(filtered_df["Family"].dropna().unique().tolist())
 selected_family = st.sidebar.selectbox("Family", families)
 
-if selected_family != "all":
+if selected_family != "All":
     filtered_df = filtered_df[filtered_df["Family"] == selected_family]
 
 # =====================================================
@@ -95,7 +95,7 @@ search = st.sidebar.text_input("Search Scientific Name")
 
 if search:
     filtered_df = filtered_df[
-        filtered_df["Scientific_Name"].str.contains(search.lower(), na=False)
+        filtered_df["Scientific_Name"].str.contains(search, case=False, na=False)
     ]
 
 # =====================================================
@@ -106,37 +106,28 @@ st.success(f"{len(filtered_df)} species found")
 st.divider()
 
 # =====================================================
-# IMAGE SAFE LOADER (FIXED PART)
+# IMAGE HANDLER
 # =====================================================
 
-def find_image(filename):
-    """
-    Robust image finder:
-    - handles case mismatch
-    - handles missing spaces
-    - handles nested mistakes
-    """
-
+def get_image_path(filename):
     if pd.isna(filename):
         return None
 
-    filename = str(filename).strip().lower()
+    filename = str(filename).strip()
 
-    # Try direct match in images folder
     direct_path = os.path.join(IMAGE_FOLDER, filename)
     if os.path.exists(direct_path):
         return direct_path
 
-    # Try case-insensitive search
     if os.path.exists(IMAGE_FOLDER):
         for f in os.listdir(IMAGE_FOLDER):
-            if f.lower() == filename:
+            if f.lower() == filename.lower():
                 return os.path.join(IMAGE_FOLDER, f)
 
     return None
 
 # =====================================================
-# DISPLAY RESULTS
+# DISPLAY
 # =====================================================
 
 if len(filtered_df) == 0:
@@ -147,8 +138,7 @@ for _, row in filtered_df.iterrows():
     col1, col2 = st.columns([1, 2])
 
     with col1:
-
-        img_path = find_image(row["image"])
+        img_path = get_image_path(row["image"])
 
         if img_path:
             st.image(img_path, use_container_width=True)
@@ -156,7 +146,6 @@ for _, row in filtered_df.iterrows():
             st.error(f"Missing image: {row['image']}")
 
     with col2:
-
         st.subheader(row["Scientific_Name"])
         st.write(f"**Order:** {row['Order']}")
         st.write(f"**Family:** {row['Family']}")
