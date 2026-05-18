@@ -106,6 +106,22 @@ st.markdown(
     """,
     unsafe_allow_html=True
 )
+ /* =========================
+       FORCE SELECTBOX BOX WHITE (ORDER + FAMILY)
+    ========================= */
+
+    div[data-baseweb="select"] > div {
+        background-color: white !important;
+    }
+
+    div[data-baseweb="select"] > div > div {
+        background-color: white !important;
+    }
+
+    div[data-baseweb="select"] input {
+        background-color: white !important;
+        color: black !important;
+    }
 # =====================================================
 # LOAD DATA
 # =====================================================
