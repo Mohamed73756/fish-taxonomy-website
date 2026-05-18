@@ -19,34 +19,43 @@ st.set_page_config(
 st.markdown(
     """
     <style>
+
+    /* MAIN APP BACKGROUND */
     .stApp {
         background: linear-gradient(to bottom, #dff6ff, #ffffff);
     }
 
-    /* Default text adapts to theme */
-    html, body, [class*="css"]  {
-        color: var(--text-color);
+    /* FORCE READABLE TEXT IN BOTH MODES */
+    html, body, [class*="css"] {
+        color: #0b1f3a !important;
     }
 
-    /* Headings */
+    /* HEADINGS */
     h1, h2, h3, h4, h5, h6 {
-        color: var(--text-color);
+        color: #0b1f3a !important;
     }
 
-    /* Sidebar */
+    /* SIDEBAR BACKGROUND */
     .stSidebar {
         background-color: #cfefff;
     }
 
-    /* Make sidebar text readable in both modes */
+    /* SIDEBAR TEXT */
     .stSidebar * {
-        color: var(--text-color);
+        color: #0b1f3a !important;
     }
+
+    /* STREAMLIT WIDGET TEXT (important fix) */
+    .stSelectbox label,
+    .stTextInput label,
+    .stCheckbox label {
+        color: #0b1f3a !important;
+    }
+
     </style>
     """,
     unsafe_allow_html=True
 )
-
 # =====================================================
 # LOAD DATA
 # =====================================================
