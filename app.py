@@ -80,32 +80,6 @@ st.markdown(
         color: black !important;
     }
 
-    /* =========================
-       SEARCH BOX (TEXT INPUT)
-    ========================= */
-
-    input {
-        background-color: white !important;
-        color: black !important;
-        border: 1px solid #ccc !important;
-    }
-
-    input::placeholder {
-        color: #666 !important;
-    }
-
-    /* =========================
-       BUTTONS / WIDGETS
-    ========================= */
-
-    button {
-        color: black !important;
-    }
-
-    </style>
-    """,
-    unsafe_allow_html=True
-)
  /* =========================
        FORCE SELECTBOX BOX WHITE (ORDER + FAMILY)
     ========================= */
