@@ -21,14 +21,23 @@ st.markdown(
     <style>
     .stApp {
         background: linear-gradient(to bottom, #dff6ff, #ffffff);
+        color: black;
     }
 
-    h1, h2, h3 {
-        color: #0b3d91;
+    h1, h2, h3, h4, h5, h6 {
+        color: black !important;
+    }
+
+    p, span, div, label {
+        color: black !important;
     }
 
     .stSidebar {
         background-color: #cfefff;
+    }
+
+    .stSidebar * {
+        color: black !important;
     }
     </style>
     """,
