@@ -20,22 +20,21 @@ st.markdown(
     """
     <style>
 
-    /* APP BACKGROUND (keep your ocean look) */
+    /* APP BACKGROUND */
     .stApp {
         background: linear-gradient(to bottom, #dff6ff, #ffffff);
     }
 
-    /* FORCE EVERYTHING TO BLACK */
+    /* FORCE TEXT BLACK */
     html, body, [class*="css"] {
         color: black !important;
     }
 
-    /* HEADINGS */
     h1, h2, h3, h4, h5, h6 {
         color: black !important;
     }
 
-    /* SIDEBAR */
+    /* SIDEBAR BACKGROUND */
     .stSidebar {
         background-color: #cfefff;
     }
@@ -44,16 +43,34 @@ st.markdown(
         color: black !important;
     }
 
-    /* INPUT LABELS + TEXT */
-    label, span, p, div {
+    /* ================================
+       DROPDOWN (SELECTBOX) FIX
+       ================================ */
+
+    /* The box itself */
+    div[data-baseweb="select"] > div {
+        background-color: white !important;
         color: black !important;
     }
 
-    /* STREAMLIT WIDGET TEXT */
-    .stSelectbox label,
-    .stTextInput label,
-    .stMarkdown,
-    .stDataFrame {
+    /* Selected value text */
+    div[data-baseweb="select"] span {
+        color: black !important;
+    }
+
+    /* Dropdown menu list */
+    ul {
+        background-color: white !important;
+    }
+
+    /* Dropdown options */
+    li {
+        color: black !important;
+    }
+
+    /* Hover state */
+    li:hover {
+        background-color: #dff6ff !important;
         color: black !important;
     }
 
