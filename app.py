@@ -20,21 +20,27 @@ st.markdown(
     """
     <style>
 
-    /* APP BACKGROUND */
+    /* =========================
+       BACKGROUND
+    ========================= */
     .stApp {
         background: linear-gradient(to bottom, #dff6ff, #ffffff);
     }
 
-    /* FORCE TEXT BLACK */
+    /* =========================
+       FORCE ALL TEXT BLACK
+    ========================= */
     html, body, [class*="css"] {
         color: black !important;
     }
 
-    h1, h2, h3, h4, h5, h6 {
+    h1, h2, h3, h4, h5, h6, p, span, label {
         color: black !important;
     }
 
-    /* SIDEBAR BACKGROUND */
+    /* =========================
+       SIDEBAR
+    ========================= */
     .stSidebar {
         background-color: #cfefff;
     }
@@ -43,34 +49,56 @@ st.markdown(
         color: black !important;
     }
 
-    /* ================================
-       DROPDOWN (SELECTBOX) FIX
-       ================================ */
+    /* =========================
+       SELECTBOX (ORDER / FAMILY)
+    ========================= */
 
-    /* The box itself */
-    div[data-baseweb="select"] > div {
+    div[data-baseweb="select"] {
         background-color: white !important;
+        border-radius: 6px;
+    }
+
+    div[data-baseweb="select"] * {
         color: black !important;
     }
 
-    /* Selected value text */
     div[data-baseweb="select"] span {
         color: black !important;
     }
 
-    /* Dropdown menu list */
+    /* Dropdown menu */
     ul {
         background-color: white !important;
     }
 
-    /* Dropdown options */
     li {
         color: black !important;
     }
 
-    /* Hover state */
     li:hover {
         background-color: #dff6ff !important;
+        color: black !important;
+    }
+
+    /* =========================
+       SEARCH BOX (TEXT INPUT)
+    ========================= */
+
+    input {
+        background-color: white !important;
+        color: black !important;
+        border: 1px solid #ccc !important;
+    }
+
+    input::placeholder {
+        color: #666 !important;
+    }
+
+    /* =========================
+       BUTTONS / WIDGETS
+    ========================= */
+
+    button {
         color: black !important;
     }
 
