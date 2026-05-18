@@ -13,7 +13,7 @@ st.set_page_config(
 )
 
 # =====================================================
-# OCEAN THEME (LIGHT BLUE)
+# OCEAN THEME
 # =====================================================
 
 st.markdown(
@@ -40,18 +40,26 @@ st.markdown(
 # =====================================================
 
 df = pd.read_excel("fish_data.xlsx")
+
 df.columns = df.columns.str.strip()
 
 # =====================================================
-# CLEAN DATA (CRITICAL FIX)
+# HARD CLEAN (CRITICAL FIX FOR YOUR ISSUE)
 # =====================================================
+
+def clean(x):
+    return (
+        str(x)
+        .replace("\xa0", " ")   # hidden non-breaking spaces
+        .strip()
+        .lower()
+    )
 
 for col in ["Order", "Family", "Scientific_Name", "image"]:
-    if col in df.columns:
-        df[col] = df[col].astype(str).str.strip()
+    df[col] = df[col].apply(clean)
 
 # =====================================================
-# WORKING DATAFRAME COPY
+# WORKING COPY
 # =====================================================
 
 filtered_df = df.copy()
@@ -63,17 +71,23 @@ IMAGE_FOLDER = "images"
 # =====================================================
 
 st.title("🐟 Marine Fish Taxonomy Database")
-st.write("Browse fish species by taxonomy with images.")
+st.write("Browse fish species by Order and Family with images.")
+
+# =====================================================
+# DEBUG (REMOVE LATER IF YOU WANT)
+# =====================================================
+
+# st.write(df["Order"].value_counts())
 
 # =====================================================
 # ORDER FILTER
 # =====================================================
 
-order_list = ["All"] + sorted(filtered_df["Order"].dropna().unique().tolist())
+order_list = ["all"] + sorted(filtered_df["Order"].unique().tolist())
 
 selected_order = st.sidebar.selectbox("Order", order_list)
 
-if selected_order != "All":
+if selected_order != "all":
     filtered_df = filtered_df[
         filtered_df["Order"] == selected_order
     ]
@@ -82,11 +96,11 @@ if selected_order != "All":
 # FAMILY FILTER (DEPENDS ON ORDER)
 # =====================================================
 
-family_list = ["All"] + sorted(filtered_df["Family"].dropna().unique().tolist())
+family_list = ["all"] + sorted(filtered_df["Family"].unique().tolist())
 
 selected_family = st.sidebar.selectbox("Family", family_list)
 
-if selected_family != "All":
+if selected_family != "all":
     filtered_df = filtered_df[
         filtered_df["Family"] == selected_family
     ]
@@ -100,7 +114,7 @@ search = st.sidebar.text_input("Search Scientific Name")
 if search:
     filtered_df = filtered_df[
         filtered_df["Scientific_Name"].str.contains(
-            search,
+            search.lower(),
             case=False,
             na=False
         )
@@ -118,6 +132,9 @@ st.divider()
 # DISPLAY RESULTS
 # =====================================================
 
+if len(filtered_df) == 0:
+    st.warning("No fish found for this selection.")
+
 for _, row in filtered_df.iterrows():
 
     col1, col2 = st.columns([1, 2])
@@ -127,7 +144,7 @@ for _, row in filtered_df.iterrows():
     # -------------------------
     with col1:
 
-        img_file = str(row["image"]).strip()
+        img_file = row["image"]
         img_path = os.path.join(IMAGE_FOLDER, img_file)
 
         if os.path.exists(img_path):
@@ -136,11 +153,12 @@ for _, row in filtered_df.iterrows():
             st.error(f"Missing image: {img_file}")
 
     # -------------------------
-    # TEXT INFO
+    # INFO
     # -------------------------
     with col2:
 
         st.subheader(row["Scientific_Name"])
+
         st.write(f"**Order:** {row['Order']}")
         st.write(f"**Family:** {row['Family']}")
 
