@@ -20,65 +20,25 @@ st.markdown(
     """
     <style>
 
-    /* =========================
-       BACKGROUND
-    ========================= */
+    /* YOUR CSS HERE */
+
     .stApp {
         background: linear-gradient(to bottom, #dff6ff, #ffffff);
     }
 
-    /* =========================
-       FORCE ALL TEXT BLACK
-    ========================= */
-    html, body, [class*="css"] {
-        color: black !important;
-    }
-
-    h1, h2, h3, h4, h5, h6, p, span, label {
-        color: black !important;
-    }
-
-    /* =========================
-       SIDEBAR
-    ========================= */
-    .stSidebar {
-        background-color: #cfefff;
-    }
-
-    .stSidebar * {
-        color: black !important;
-    }
-
-    /* =========================
-       SELECTBOX (ORDER / FAMILY)
-    ========================= */
-
-    div[data-baseweb="select"] {
-        background-color: white !important;
-        border-radius: 6px;
-    }
-
-    div[data-baseweb="select"] * {
-        color: black !important;
-    }
-
-    div[data-baseweb="select"] span {
-        color: black !important;
-    }
-
-    /* Dropdown menu */
-    ul {
+    div[data-baseweb="select"] > div {
         background-color: white !important;
     }
 
-    li {
+    div[data-baseweb="select"] input {
+        background-color: white !important;
         color: black !important;
     }
 
-    li:hover {
-        background-color: #dff6ff !important;
-        color: black !important;
-    }
+    </style>
+    """,
+    unsafe_allow_html=True
+)
  /* =========================
        FORCE SELECTBOX BOX WHITE (ORDER + FAMILY)
     ========================= */
