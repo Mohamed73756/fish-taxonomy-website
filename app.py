@@ -21,20 +21,37 @@ st.markdown(
     <style>
 
     /* =========================
-       BACKGROUND
+       KEEP YOUR BACKGROUND
     ========================= */
     .stApp {
         background: linear-gradient(to bottom, #dff6ff, #ffffff);
     }
 
     /* =========================
-       TEXT
+       FORCE PAGE TEXT READABLE
     ========================= */
     html, body, [class*="css"] {
         color: black !important;
     }
 
-    h1, h2, h3, h4, h5, h6, p, span, label {
+    /* =========================
+       FIX TOP TOOLBAR (IMPORTANT)
+    ========================= */
+
+    header[data-testid="stHeader"] {
+        background-color: #cfefff !important;
+    }
+
+    header[data-testid="stHeader"] * {
+        color: black !important;
+    }
+
+    /* Streamlit top-right menu (hamburger + buttons) */
+    div[data-testid="stToolbar"] {
+        background-color: #cfefff !important;
+    }
+
+    div[data-testid="stToolbar"] * {
         color: black !important;
     }
 
@@ -50,28 +67,16 @@ st.markdown(
     }
 
     /* =========================
-       SELECTBOX FIX
-    ========================= */
-    div[data-baseweb="select"] > div {
-        background-color: white !important;
-    }
-
-    div[data-baseweb="select"] input {
-        background-color: white !important;
-        color: black !important;
-    }
-
-    /* =========================
-       INPUT BOX FIX
+       INPUTS (ORDER / FAMILY / SEARCH)
     ========================= */
     input {
         background-color: white !important;
         color: black !important;
-        border: 1px solid #ccc !important;
     }
 
-    input::placeholder {
-        color: #666 !important;
+    div[data-baseweb="select"] > div {
+        background-color: white !important;
+        color: black !important;
     }
 
     </style>
