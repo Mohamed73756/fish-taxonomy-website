@@ -40,23 +40,19 @@ st.markdown(
 # =====================================================
 
 df = pd.read_excel("fish_data.xlsx")
-
 df.columns = df.columns.str.strip()
 
 # =====================================================
-# HARD CLEAN (CRITICAL FIX FOR YOUR ISSUE)
+# CLEAN DATA (IMPORTANT)
 # =====================================================
 
-def clean(x):
-    return (
-        str(x)
-        .replace("\xa0", " ")   # hidden non-breaking spaces
-        .strip()
-        .lower()
-    )
+def clean_text(x):
+    return str(x).replace("\xa0", " ").strip().lower()
 
 for col in ["Order", "Family", "Scientific_Name", "image"]:
-    df[col] = df[col].apply(clean)
+    df[col] = df[col].apply(clean_text)
+
+IMAGE_FOLDER = "images"
 
 # =====================================================
 # WORKING COPY
@@ -64,46 +60,32 @@ for col in ["Order", "Family", "Scientific_Name", "image"]:
 
 filtered_df = df.copy()
 
-IMAGE_FOLDER = "images"
-
 # =====================================================
 # TITLE
 # =====================================================
 
 st.title("🐟 Marine Fish Taxonomy Database")
-st.write("Browse fish species by Order and Family with images.")
-
-# =====================================================
-# DEBUG (REMOVE LATER IF YOU WANT)
-# =====================================================
-
-# st.write(df["Order"].value_counts())
+st.write("Browse fish species with images and taxonomy filters.")
 
 # =====================================================
 # ORDER FILTER
 # =====================================================
 
-order_list = ["all"] + sorted(filtered_df["Order"].unique().tolist())
-
-selected_order = st.sidebar.selectbox("Order", order_list)
+orders = ["all"] + sorted(filtered_df["Order"].unique().tolist())
+selected_order = st.sidebar.selectbox("Order", orders)
 
 if selected_order != "all":
-    filtered_df = filtered_df[
-        filtered_df["Order"] == selected_order
-    ]
+    filtered_df = filtered_df[filtered_df["Order"] == selected_order]
 
 # =====================================================
-# FAMILY FILTER (DEPENDS ON ORDER)
+# FAMILY FILTER
 # =====================================================
 
-family_list = ["all"] + sorted(filtered_df["Family"].unique().tolist())
-
-selected_family = st.sidebar.selectbox("Family", family_list)
+families = ["all"] + sorted(filtered_df["Family"].unique().tolist())
+selected_family = st.sidebar.selectbox("Family", families)
 
 if selected_family != "all":
-    filtered_df = filtered_df[
-        filtered_df["Family"] == selected_family
-    ]
+    filtered_df = filtered_df[filtered_df["Family"] == selected_family]
 
 # =====================================================
 # SEARCH
@@ -113,20 +95,45 @@ search = st.sidebar.text_input("Search Scientific Name")
 
 if search:
     filtered_df = filtered_df[
-        filtered_df["Scientific_Name"].str.contains(
-            search.lower(),
-            case=False,
-            na=False
-        )
+        filtered_df["Scientific_Name"].str.contains(search.lower(), na=False)
     ]
 
 # =====================================================
-# RESULTS COUNT
+# RESULTS
 # =====================================================
 
 st.success(f"{len(filtered_df)} species found")
-
 st.divider()
+
+# =====================================================
+# IMAGE SAFE LOADER (FIXED PART)
+# =====================================================
+
+def find_image(filename):
+    """
+    Robust image finder:
+    - handles case mismatch
+    - handles missing spaces
+    - handles nested mistakes
+    """
+
+    if pd.isna(filename):
+        return None
+
+    filename = str(filename).strip().lower()
+
+    # Try direct match in images folder
+    direct_path = os.path.join(IMAGE_FOLDER, filename)
+    if os.path.exists(direct_path):
+        return direct_path
+
+    # Try case-insensitive search
+    if os.path.exists(IMAGE_FOLDER):
+        for f in os.listdir(IMAGE_FOLDER):
+            if f.lower() == filename:
+                return os.path.join(IMAGE_FOLDER, f)
+
+    return None
 
 # =====================================================
 # DISPLAY RESULTS
@@ -139,26 +146,18 @@ for _, row in filtered_df.iterrows():
 
     col1, col2 = st.columns([1, 2])
 
-    # -------------------------
-    # IMAGE
-    # -------------------------
     with col1:
 
-        img_file = row["image"]
-        img_path = os.path.join(IMAGE_FOLDER, img_file)
+        img_path = find_image(row["image"])
 
-        if os.path.exists(img_path):
+        if img_path:
             st.image(img_path, use_container_width=True)
         else:
-            st.error(f"Missing image: {img_file}")
+            st.error(f"Missing image: {row['image']}")
 
-    # -------------------------
-    # INFO
-    # -------------------------
     with col2:
 
         st.subheader(row["Scientific_Name"])
-
         st.write(f"**Order:** {row['Order']}")
         st.write(f"**Family:** {row['Family']}")
 
