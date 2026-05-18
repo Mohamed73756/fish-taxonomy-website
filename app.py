@@ -20,12 +20,38 @@ st.markdown(
     """
     <style>
 
-    /* YOUR CSS HERE */
-
+    /* =========================
+       BACKGROUND
+    ========================= */
     .stApp {
         background: linear-gradient(to bottom, #dff6ff, #ffffff);
     }
 
+    /* =========================
+       TEXT
+    ========================= */
+    html, body, [class*="css"] {
+        color: black !important;
+    }
+
+    h1, h2, h3, h4, h5, h6, p, span, label {
+        color: black !important;
+    }
+
+    /* =========================
+       SIDEBAR
+    ========================= */
+    .stSidebar {
+        background-color: #cfefff;
+    }
+
+    .stSidebar * {
+        color: black !important;
+    }
+
+    /* =========================
+       SELECTBOX FIX
+    ========================= */
     div[data-baseweb="select"] > div {
         background-color: white !important;
     }
@@ -33,28 +59,25 @@ st.markdown(
     div[data-baseweb="select"] input {
         background-color: white !important;
         color: black !important;
+    }
+
+    /* =========================
+       INPUT BOX FIX
+    ========================= */
+    input {
+        background-color: white !important;
+        color: black !important;
+        border: 1px solid #ccc !important;
+    }
+
+    input::placeholder {
+        color: #666 !important;
     }
 
     </style>
     """,
     unsafe_allow_html=True
 )
- /* =========================
-       FORCE SELECTBOX BOX WHITE (ORDER + FAMILY)
-    ========================= */
-
-    div[data-baseweb="select"] > div {
-        background-color: white !important;
-    }
-
-    div[data-baseweb="select"] > div > div {
-        background-color: white !important;
-    }
-
-    div[data-baseweb="select"] input {
-        background-color: white !important;
-        color: black !important;
-    }
 # =====================================================
 # LOAD DATA
 # =====================================================
