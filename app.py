@@ -130,46 +130,54 @@ st.title("🐟 Marine Fish Taxonomy Database")
 st.write("Browse marine fish by Order, Family, and Species.")
 
 # =====================================================
+# =====================================================
+# BASE DATA (NEVER CHANGE THIS)
+# =====================================================
+
+base_df = df.copy()
+
+# =====================================================
 # ORDER FILTER
 # =====================================================
 
-orders = ["All"] + sorted(filtered_df["Order"].dropna().unique().tolist())
+orders = ["All"] + sorted(base_df["Order"].dropna().unique().tolist())
 selected_order = st.sidebar.selectbox("Order", orders)
+
+filtered_df = base_df.copy()
 
 if selected_order != "All":
     filtered_df = filtered_df[filtered_df["Order"] == selected_order]
 
 # =====================================================
-# FAMILY FILTER
+# FAMILY FILTER (based on order only)
 # =====================================================
 
-families = (
-    filtered_df["Family"]
-    .dropna()
-    .astype(str)
-    .str.strip()
-)
-
-families = [f for f in families.unique().tolist() if f.lower() != "nan"]
-
-families = ["All"] + sorted(families)
-
+families = ["All"] + sorted(filtered_df["Family"].dropna().unique().tolist())
 selected_family = st.sidebar.selectbox("Family", families)
 
 if selected_family != "All":
     filtered_df = filtered_df[filtered_df["Family"] == selected_family]
 
 # =====================================================
-# SEARCH
+# GLOBAL SEARCH (IMPORTANT FIX)
 # =====================================================
 
 search = st.sidebar.text_input("Search Scientific Name")
 
 if search:
-    filtered_df = filtered_df[
-        filtered_df["Scientific_Name"].str.contains(search, case=False, na=False)
+    # search across FULL dataset, NOT filtered_df
+    search_results = base_df[
+        base_df["Scientific_Name"].str.contains(search, case=False, na=False)
     ]
 
+    # re-apply filters ON search results
+    if selected_order != "All":
+        search_results = search_results[search_results["Order"] == selected_order]
+
+    if selected_family != "All":
+        search_results = search_results[search_results["Family"] == selected_family]
+
+    filtered_df = search_results
 # =====================================================
 # RESULTS
 # =====================================================
