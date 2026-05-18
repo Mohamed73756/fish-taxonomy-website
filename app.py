@@ -140,26 +140,43 @@ base_df = df.copy()
 # ORDER FILTER
 # =====================================================
 
-orders = ["All"] + sorted(base_df["Order"].dropna().unique().tolist())
+orders = ["All"] + sorted(filtered_df["Order"].dropna().unique().tolist())
 selected_order = st.sidebar.selectbox("Order", orders)
-
-filtered_df = base_df.copy()
 
 if selected_order != "All":
     filtered_df = filtered_df[filtered_df["Order"] == selected_order]
 
 # =====================================================
-# FAMILY FILTER (based on order only)
+# FAMILY FILTER
 # =====================================================
 
-families = ["All"] + sorted(filtered_df["Family"].dropna().unique().tolist())
+families = (
+    filtered_df["Family"]
+    .dropna()
+    .astype(str)
+    .str.strip()
+)
+
+families = [f for f in families.unique().tolist() if f.lower() != "nan"]
+
+families = ["All"] + sorted(families)
+
 selected_family = st.sidebar.selectbox("Family", families)
 
 if selected_family != "All":
     filtered_df = filtered_df[filtered_df["Family"] == selected_family]
 
 # =====================================================
-# GLOBAL SEARCH (IMPORTANT FIX)
+# SEARCH
+# =====================================================
+
+search = st.sidebar.text_input("Search Scientific Name")
+
+if search:
+    filtered_df = filtered_df[
+        filtered_df["Scientific_Name"].str.contains(search, case=False, na=False)
+    ]
+
 # =====================================================
 
 search = st.sidebar.text_input("Search Scientific Name")
