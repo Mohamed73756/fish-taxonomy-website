@@ -20,36 +20,41 @@ st.markdown(
     """
     <style>
 
-    /* MAIN APP BACKGROUND */
+    /* APP BACKGROUND (keep your ocean look) */
     .stApp {
         background: linear-gradient(to bottom, #dff6ff, #ffffff);
     }
 
-    /* FORCE READABLE TEXT IN BOTH MODES */
+    /* FORCE EVERYTHING TO BLACK */
     html, body, [class*="css"] {
-        color: #0b1f3a !important;
+        color: black !important;
     }
 
     /* HEADINGS */
     h1, h2, h3, h4, h5, h6 {
-        color: #0b1f3a !important;
+        color: black !important;
     }
 
-    /* SIDEBAR BACKGROUND */
+    /* SIDEBAR */
     .stSidebar {
         background-color: #cfefff;
     }
 
-    /* SIDEBAR TEXT */
     .stSidebar * {
-        color: #0b1f3a !important;
+        color: black !important;
     }
 
-    /* STREAMLIT WIDGET TEXT (important fix) */
+    /* INPUT LABELS + TEXT */
+    label, span, p, div {
+        color: black !important;
+    }
+
+    /* STREAMLIT WIDGET TEXT */
     .stSelectbox label,
     .stTextInput label,
-    .stCheckbox label {
-        color: #0b1f3a !important;
+    .stMarkdown,
+    .stDataFrame {
+        color: black !important;
     }
 
     </style>
