@@ -13,7 +13,7 @@ st.set_page_config(
 )
 
 # =====================================================
-# OCEAN THEME (LIGHT BLUE BACKGROUND)
+# OCEAN THEME (LIGHT BLUE)
 # =====================================================
 
 st.markdown(
@@ -42,10 +42,19 @@ st.markdown(
 df = pd.read_excel("fish_data.xlsx")
 df.columns = df.columns.str.strip()
 
-# CLEAN TEXT (VERY IMPORTANT FIX)
+# =====================================================
+# CLEAN DATA (CRITICAL FIX)
+# =====================================================
+
 for col in ["Order", "Family", "Scientific_Name", "image"]:
     if col in df.columns:
         df[col] = df[col].astype(str).str.strip()
+
+# =====================================================
+# WORKING DATAFRAME COPY
+# =====================================================
+
+filtered_df = df.copy()
 
 IMAGE_FOLDER = "images"
 
@@ -54,21 +63,15 @@ IMAGE_FOLDER = "images"
 # =====================================================
 
 st.title("🐟 Marine Fish Taxonomy Database")
-st.write("Interactive classification of marine fish species.")
-
-# =====================================================
-# COPY DATAFRAME (IMPORTANT)
-# =====================================================
-
-filtered_df = df.copy()
+st.write("Browse fish species by taxonomy with images.")
 
 # =====================================================
 # ORDER FILTER
 # =====================================================
 
-orders = ["All"] + sorted(filtered_df["Order"].dropna().unique().tolist())
+order_list = ["All"] + sorted(filtered_df["Order"].dropna().unique().tolist())
 
-selected_order = st.sidebar.selectbox("Order", orders)
+selected_order = st.sidebar.selectbox("Order", order_list)
 
 if selected_order != "All":
     filtered_df = filtered_df[
@@ -76,12 +79,12 @@ if selected_order != "All":
     ]
 
 # =====================================================
-# FAMILY FILTER (DEPENDS ON ORDER FILTER)
+# FAMILY FILTER (DEPENDS ON ORDER)
 # =====================================================
 
-families = ["All"] + sorted(filtered_df["Family"].dropna().unique().tolist())
+family_list = ["All"] + sorted(filtered_df["Family"].dropna().unique().tolist())
 
-selected_family = st.sidebar.selectbox("Family", families)
+selected_family = st.sidebar.selectbox("Family", family_list)
 
 if selected_family != "All":
     filtered_df = filtered_df[
@@ -112,7 +115,7 @@ st.success(f"{len(filtered_df)} species found")
 st.divider()
 
 # =====================================================
-# DISPLAY FISH
+# DISPLAY RESULTS
 # =====================================================
 
 for _, row in filtered_df.iterrows():
