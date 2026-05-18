@@ -21,38 +21,35 @@ st.markdown(
     <style>
 
     /* =========================
-       KEEP YOUR BACKGROUND
+       APP BACKGROUND
     ========================= */
     .stApp {
         background: linear-gradient(to bottom, #dff6ff, #ffffff);
     }
 
     /* =========================
-       FORCE PAGE TEXT READABLE
+       FORCE READABLE TEXT (IMPORTANT FIX)
     ========================= */
-    html, body, [class*="css"] {
-        color: black !important;
+
+    .stApp, .stApp * {
+        color: #0b1f3a !important;
+    }
+
+    /* Override Streamlit dark theme variables */
+    :root {
+        --text-color: #0b1f3a !important;
     }
 
     /* =========================
-       FIX TOP TOOLBAR (IMPORTANT)
+       HEADINGS (TITLE FIX)
     ========================= */
-
-    header[data-testid="stHeader"] {
-        background-color: #cfefff !important;
+    h1, h2, h3, h4, h5, h6 {
+        color: #0b1f3a !important;
     }
 
-    header[data-testid="stHeader"] * {
-        color: black !important;
-    }
-
-    /* Streamlit top-right menu (hamburger + buttons) */
-    div[data-testid="stToolbar"] {
-        background-color: #cfefff !important;
-    }
-
-    div[data-testid="stToolbar"] * {
-        color: black !important;
+    /* Ensure Streamlit title/subheader stays visible */
+    .stMarkdown, .stText, .stTitle, .stHeader {
+        color: #0b1f3a !important;
     }
 
     /* =========================
@@ -63,11 +60,11 @@ st.markdown(
     }
 
     .stSidebar * {
-        color: black !important;
+        color: #0b1f3a !important;
     }
 
     /* =========================
-       INPUTS (ORDER / FAMILY / SEARCH)
+       INPUTS + DROPDOWNS
     ========================= */
     input {
         background-color: white !important;
@@ -76,6 +73,23 @@ st.markdown(
 
     div[data-baseweb="select"] > div {
         background-color: white !important;
+        color: black !important;
+    }
+
+    div[data-baseweb="select"] * {
+        color: black !important;
+    }
+
+    /* =========================
+       TOOLBAR FIX
+    ========================= */
+    header[data-testid="stHeader"],
+    div[data-testid="stToolbar"] {
+        background-color: #cfefff !important;
+    }
+
+    header[data-testid="stHeader"] *,
+    div[data-testid="stToolbar"] * {
         color: black !important;
     }
 
