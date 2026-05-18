@@ -178,24 +178,6 @@ if search:
     ]
 
 # =====================================================
-
-search = st.sidebar.text_input("Search Scientific Name")
-
-if search:
-    # search across FULL dataset, NOT filtered_df
-    search_results = base_df[
-        base_df["Scientific_Name"].str.contains(search, case=False, na=False)
-    ]
-
-    # re-apply filters ON search results
-    if selected_order != "All":
-        search_results = search_results[search_results["Order"] == selected_order]
-
-    if selected_family != "All":
-        search_results = search_results[search_results["Family"] == selected_family]
-
-    filtered_df = search_results
-# =====================================================
 # RESULTS
 # =====================================================
 
