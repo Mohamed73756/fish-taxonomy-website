@@ -21,23 +21,26 @@ st.markdown(
     <style>
     .stApp {
         background: linear-gradient(to bottom, #dff6ff, #ffffff);
-        color: black;
     }
 
+    /* Default text adapts to theme */
+    html, body, [class*="css"]  {
+        color: var(--text-color);
+    }
+
+    /* Headings */
     h1, h2, h3, h4, h5, h6 {
-        color: black !important;
+        color: var(--text-color);
     }
 
-    p, span, div, label {
-        color: black !important;
-    }
-
+    /* Sidebar */
     .stSidebar {
         background-color: #cfefff;
     }
 
+    /* Make sidebar text readable in both modes */
     .stSidebar * {
-        color: black !important;
+        color: var(--text-color);
     }
     </style>
     """,
@@ -90,7 +93,17 @@ if selected_order != "All":
 # FAMILY FILTER
 # =====================================================
 
-families = ["All"] + sorted(filtered_df["Family"].dropna().unique().tolist())
+families = (
+    filtered_df["Family"]
+    .dropna()
+    .astype(str)
+    .str.strip()
+)
+
+families = [f for f in families.unique().tolist() if f.lower() != "nan"]
+
+families = ["All"] + sorted(families)
+
 selected_family = st.sidebar.selectbox("Family", families)
 
 if selected_family != "All":
